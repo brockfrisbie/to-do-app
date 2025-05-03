@@ -7,25 +7,37 @@ document.addEventListener("DOMContentLoaded", function () {
     addButton.addEventListener("click", function () {
         const taskText = taskInput.value.trim();
         if (taskText === "") return;
-
+      
         const listItem = document.createElement("li");
-        listItem.textContent = taskText;
-        
-        // Add click event to toggle completion
-        listItem.addEventListener("click", function () {
-            listItem.classList.toggle("completed");
-
-            // Move to bottom if marked complete
-            if (listItem.classList.contains("completed")) {
-                taskList.appendChild(listItem);
-
-            } else {
-                // Move to top if unmarked
-                taskList.insertBefore(listItem, taskList.firstChild);
-            }
+      
+        // Create a span for the task text
+        const taskSpan = document.createElement("span");
+        taskSpan.textContent = taskText;
+        listItem.appendChild(taskSpan);
+      
+        // Create the delete button
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "✖";
+        deleteBtn.className = "delete-button";
+        listItem.appendChild(deleteBtn);
+      
+        // Toggle complete on task text click
+        taskSpan.addEventListener("click", function () {
+          listItem.classList.toggle("completed");
+          if (listItem.classList.contains("completed")) {
+            taskList.appendChild(listItem);
+          } else {
+            taskList.insertBefore(listItem, taskList.firstChild);
+          }
         });
-
+      
+        // Delete task on delete button click
+        deleteBtn.addEventListener("click", function (e) {
+          e.stopPropagation(); // Prevent triggering complete toggle
+          listItem.remove();
+        });
+      
         taskList.insertBefore(listItem, taskList.firstChild);
-        taskInput.value ="";
-    });
+        taskInput.value = "";
+      });
 });
